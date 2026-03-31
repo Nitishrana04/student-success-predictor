@@ -14,16 +14,201 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attendance: {
+        Row: {
+          created_at: string | null
+          date: string
+          id: string
+          marked_by: string | null
+          status: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          date?: string
+          id?: string
+          marked_by?: string | null
+          status?: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          id?: string
+          marked_by?: string | null
+          status?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marks: {
+        Row: {
+          created_at: string | null
+          exam_date: string | null
+          exam_type: string
+          id: string
+          marks_obtained: number
+          student_id: string
+          subject: string
+          total_marks: number
+        }
+        Insert: {
+          created_at?: string | null
+          exam_date?: string | null
+          exam_type?: string
+          id?: string
+          marks_obtained?: number
+          student_id: string
+          subject: string
+          total_marks?: number
+        }
+        Update: {
+          created_at?: string | null
+          exam_date?: string | null
+          exam_type?: string
+          id?: string
+          marks_obtained?: number
+          student_id?: string
+          subject?: string
+          total_marks?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marks_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      predictions: {
+        Row: {
+          created_by: string | null
+          factors: Json | null
+          id: string
+          predicted_at: string | null
+          recommendation: string | null
+          risk_level: string
+          risk_score: number | null
+          student_id: string
+        }
+        Insert: {
+          created_by?: string | null
+          factors?: Json | null
+          id?: string
+          predicted_at?: string | null
+          recommendation?: string | null
+          risk_level?: string
+          risk_score?: number | null
+          student_id: string
+        }
+        Update: {
+          created_by?: string | null
+          factors?: Json | null
+          id?: string
+          predicted_at?: string | null
+          recommendation?: string | null
+          risk_level?: string
+          risk_score?: number | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "predictions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          address: string | null
+          class: string
+          contact_number: string | null
+          created_at: string | null
+          enrollment_date: string | null
+          guardian_name: string | null
+          id: string
+          roll_number: string
+          section: string | null
+          status: string | null
+          student_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          class?: string
+          contact_number?: string | null
+          created_at?: string | null
+          enrollment_date?: string | null
+          guardian_name?: string | null
+          id?: string
+          roll_number: string
+          section?: string | null
+          status?: string | null
+          student_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          class?: string
+          contact_number?: string | null
+          created_at?: string | null
+          enrollment_date?: string | null
+          guardian_name?: string | null
+          id?: string
+          roll_number?: string
+          section?: string | null
+          status?: string | null
+          student_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "teacher" | "student"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +335,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "teacher", "student"],
+    },
   },
 } as const
