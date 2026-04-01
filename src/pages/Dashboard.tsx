@@ -1,143 +1,85 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import StatsCard from "@/components/dashboard/StatsCard";
-import RiskBadge from "@/components/dashboard/RiskBadge";
-import { Users, AlertTriangle, GraduationCap, TrendingUp, Brain } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
-
-const attendanceData = [
-  { month: "Jan", attendance: 85 },
-  { month: "Feb", attendance: 78 },
-  { month: "Mar", attendance: 72 },
-  { month: "Apr", attendance: 80 },
-  { month: "May", attendance: 65 },
-  { month: "Jun", attendance: 70 },
-];
-
-const riskData = [
-  { name: "Low Risk", value: 156, color: "hsl(152, 60%, 42%)" },
-  { name: "Medium Risk", value: 48, color: "hsl(38, 92%, 55%)" },
-  { name: "High Risk", value: 22, color: "hsl(0, 72%, 55%)" },
-];
-
-const recentAlerts = [
-  { name: "Rahul Sharma", risk: "high" as const, reason: "Attendance below 40%, 3 pending fees" },
-  { name: "Priya Gupta", risk: "medium" as const, reason: "Marks declining in last 2 semesters" },
-  { name: "Amit Kumar", risk: "high" as const, reason: "No attendance for 2 weeks" },
-  { name: "Sneha Patel", risk: "medium" as const, reason: "Fee payment pending, low assignment submission" },
-];
+import { Route, Routes } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import RoleSidebar from "@/components/dashboard/RoleSidebar";
+import AdminDashboard from "@/components/dashboard/admin/AdminDashboard";
+import ManageUsers from "@/components/dashboard/admin/ManageUsers";
+import ManageColleges from "@/components/dashboard/admin/ManageColleges";
+import ManageCourses from "@/components/dashboard/admin/ManageCourses";
+import ManageStudents from "@/components/dashboard/admin/ManageStudents";
+import AdminPredictions from "@/components/dashboard/admin/AdminPredictions";
+import AdminAnalytics from "@/components/dashboard/admin/AdminAnalytics";
+import AdminNotifications from "@/components/dashboard/admin/AdminNotifications";
+import TeacherDashboard from "@/components/dashboard/teacher/TeacherDashboard";
+import TeacherStudents from "@/components/dashboard/teacher/TeacherStudents";
+import TeacherAttendance from "@/components/dashboard/teacher/TeacherAttendance";
+import TeacherMarks from "@/components/dashboard/teacher/TeacherMarks";
+import TeacherPredictions from "@/components/dashboard/teacher/TeacherPredictions";
+import TeacherAlerts from "@/components/dashboard/teacher/TeacherAlerts";
+import TeacherFeedback from "@/components/dashboard/teacher/TeacherFeedback";
+import StudentDashboard from "@/components/dashboard/student/StudentDashboard";
+import StudentProfile from "@/components/dashboard/student/StudentProfile";
+import StudentAttendance from "@/components/dashboard/student/StudentAttendance";
+import StudentMarks from "@/components/dashboard/student/StudentMarks";
+import StudentPerformance from "@/components/dashboard/student/StudentPerformance";
+import StudentFeedback from "@/components/dashboard/student/StudentFeedback";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const { user, role, loading } = useAuth();
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate("/login");
-      } else {
-        setUser(session.user);
-      }
-    });
+  if (loading || !user || !role) {
+    return (
+      <div className="flex min-h-screen bg-background items-center justify-center">
+        <div className="space-y-4 w-64">
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+      </div>
+    );
+  }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) navigate("/login");
-      else setUser(session.user);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  if (!user) return null;
+  const userName = user.user_metadata?.full_name || user.email || "User";
 
   return (
     <div className="flex min-h-screen bg-background">
-      <DashboardSidebar />
+      <RoleSidebar role={role} userName={userName} />
       <main className="flex-1 p-6 overflow-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold font-display">Dashboard Overview</h1>
-          <p className="text-muted-foreground text-sm">
-            Welcome back, {user?.user_metadata?.full_name || "Admin"}
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatsCard icon={Users} title="Total Students" value={226} trend="12 new this month" trendUp />
-          <StatsCard icon={AlertTriangle} title="High Risk" value={22} trend="3 more than last month" trendUp={false} colorClass="text-danger" />
-          <StatsCard icon={GraduationCap} title="Avg Attendance" value="74%" trend="2% lower" trendUp={false} />
-          <StatsCard icon={TrendingUp} title="Prediction Accuracy" value="94.5%" trend="1.2% improvement" trendUp />
-        </div>
-
-        {/* Charts */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-card rounded-xl p-5 shadow-card border border-border/50">
-            <h3 className="font-display font-semibold mb-4">Attendance Trend</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={attendanceData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 18%, 88%)" />
-                <XAxis dataKey="month" stroke="hsl(220, 15%, 45%)" fontSize={12} />
-                <YAxis stroke="hsl(220, 15%, 45%)" fontSize={12} />
-                <Tooltip />
-                <Bar dataKey="attendance" fill="hsl(210, 78%, 46%)" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-card rounded-xl p-5 shadow-card border border-border/50">
-            <h3 className="font-display font-semibold mb-4">Risk Distribution</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie data={riskData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="value" paddingAngle={3}>
-                  {riskData.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="flex justify-center gap-4 mt-2">
-              {riskData.map((item) => (
-                <div key={item.name} className="flex items-center gap-1.5 text-xs">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: item.color }} />
-                  <span className="text-muted-foreground">{item.name} ({item.value})</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Alerts */}
-        <div className="bg-card rounded-xl p-5 shadow-card border border-border/50">
-          <div className="flex items-center gap-2 mb-4">
-            <Brain className="w-5 h-5 text-primary" />
-            <h3 className="font-display font-semibold">Recent Risk Alerts</h3>
-          </div>
-          <div className="space-y-3">
-            {recentAlerts.map((alert, i) => (
-              <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border border-border/30">
-                <div>
-                  <p className="font-medium text-sm">{alert.name}</p>
-                  <p className="text-xs text-muted-foreground">{alert.reason}</p>
-                </div>
-                <RiskBadge level={alert.risk} />
-              </div>
-            ))}
-          </div>
-        </div>
+        <Routes>
+          {role === "admin" && (
+            <>
+              <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<ManageUsers />} />
+              <Route path="colleges" element={<ManageColleges />} />
+              <Route path="courses" element={<ManageCourses />} />
+              <Route path="students" element={<ManageStudents />} />
+              <Route path="predictions" element={<AdminPredictions />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+              <Route path="notifications" element={<AdminNotifications />} />
+            </>
+          )}
+          {role === "teacher" && (
+            <>
+              <Route index element={<TeacherDashboard />} />
+              <Route path="students" element={<TeacherStudents />} />
+              <Route path="attendance" element={<TeacherAttendance />} />
+              <Route path="marks" element={<TeacherMarks />} />
+              <Route path="predictions" element={<TeacherPredictions />} />
+              <Route path="alerts" element={<TeacherAlerts />} />
+              <Route path="feedback" element={<TeacherFeedback />} />
+            </>
+          )}
+          {role === "student" && (
+            <>
+              <Route index element={<StudentDashboard />} />
+              <Route path="profile" element={<StudentProfile />} />
+              <Route path="attendance" element={<StudentAttendance />} />
+              <Route path="marks" element={<StudentMarks />} />
+              <Route path="performance" element={<StudentPerformance />} />
+              <Route path="feedback" element={<StudentFeedback />} />
+            </>
+          )}
+        </Routes>
       </main>
     </div>
   );
