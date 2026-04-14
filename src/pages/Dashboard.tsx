@@ -9,6 +9,7 @@ import ManageStudents from "@/components/dashboard/admin/ManageStudents";
 import AdminPredictions from "@/components/dashboard/admin/AdminPredictions";
 import AdminAnalytics from "@/components/dashboard/admin/AdminAnalytics";
 import AdminNotifications from "@/components/dashboard/admin/AdminNotifications";
+import AdminSettings from "@/components/dashboard/admin/AdminSettings";
 import TeacherDashboard from "@/components/dashboard/teacher/TeacherDashboard";
 import TeacherStudents from "@/components/dashboard/teacher/TeacherStudents";
 import TeacherAttendance from "@/components/dashboard/teacher/TeacherAttendance";
@@ -56,6 +57,7 @@ const Dashboard = () => {
               <Route path="predictions" element={<AdminPredictions />} />
               <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="notifications" element={<AdminNotifications />} />
+              <Route path="settings" element={<AdminSettings />} />
             </>
           )}
           {role === "teacher" && (
