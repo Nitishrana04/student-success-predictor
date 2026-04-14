@@ -57,6 +57,7 @@ const Dashboard = () => {
               <Route path="predictions" element={<AdminPredictions />} />
               <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="notifications" element={<AdminNotifications />} />
+              <Route path="settings" element={<AdminSettings />} />
             </>
           )}
           {role === "teacher" && (
