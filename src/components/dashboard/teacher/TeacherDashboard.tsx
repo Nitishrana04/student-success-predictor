@@ -20,7 +20,10 @@ const TeacherDashboard = () => {
       supabase.from("notifications").select("*").eq("recipient_user_id", user.id).order("created_at", { ascending: false }).limit(5),
     ]);
     setStudents(sRes.data || []);
-    const allPreds = (sRes.data || []).flatMap(s => (s.predictions || []).map((p: any) => ({ ...p, student_name: s.student_name })));
+    const allPreds = (sRes.data || []).flatMap((s: any) => {
+      const preds = Array.isArray(s.predictions) ? s.predictions : s.predictions ? [s.predictions] : [];
+      return preds.map((p: any) => ({ ...p, student_name: s.student_name }));
+    });
     setPredictions(allPreds);
     setNotifications(nRes.data || []);
   };
