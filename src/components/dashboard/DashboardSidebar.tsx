@@ -40,7 +40,7 @@ const DashboardSidebar = () => {
         <div className="gradient-hero p-2 rounded-lg">
           <Brain className="w-5 h-5 text-primary-foreground" />
         </div>
-        <span className="font-display font-bold text-sidebar-foreground">DropGuard AI</span>
+        <span className="font-display font-bold text-sidebar-foreground">Student Drop Prediction System</span>
       </div>
 
       <nav className="flex-1 p-3 space-y-1">

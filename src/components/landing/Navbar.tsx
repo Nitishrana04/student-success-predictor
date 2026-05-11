@@ -12,7 +12,7 @@ const Navbar = () => {
           <div className="gradient-hero p-2 rounded-lg">
             <Brain className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold text-lg">DropGuard AI</span>
+          <span className="font-display font-bold text-lg">Student Drop Prediction System</span>
         </div>
 
         <div className="hidden md:flex items-center gap-8">

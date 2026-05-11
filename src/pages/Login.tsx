@@ -69,7 +69,7 @@ const Login = () => {
             {isSignUp ? "Create Account" : "Welcome Back"}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {isSignUp ? "Join DropGuard AI" : "Sign in to your account"}
+            {isSignUp ? "Join Student Drop Prediction System" : "Sign in to your account"}
           </p>
         </div>
 
