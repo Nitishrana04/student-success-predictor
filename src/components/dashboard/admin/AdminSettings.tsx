@@ -172,7 +172,7 @@ const AdminSettings = () => {
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center py-2">
               <span className="text-sm text-muted-foreground">Application</span>
-              <span className="text-sm font-medium">DropGuard AI</span>
+              <span className="text-sm font-medium">Student Drop Prediction System</span>
             </div>
             <Separator />
             <div className="flex justify-between items-center py-2">

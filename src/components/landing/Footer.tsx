@@ -8,10 +8,10 @@ const Footer = () => (
           <div className="gradient-hero p-2 rounded-lg">
             <Brain className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold">DropGuard AI</span>
+          <span className="font-display font-bold">Student Drop Prediction System</span>
         </div>
         <p className="text-sm text-muted-foreground">
-          © 2026 DropGuard AI — Student Dropout Prediction System. MCA Final Year Project.
+          © 2026 Student Drop Prediction System. MCA Final Year Project.
         </p>
       </div>
     </div>

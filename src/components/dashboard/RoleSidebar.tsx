@@ -70,7 +70,7 @@ const RoleSidebar = ({ role, userName }: Props) => {
           <Brain className="w-5 h-5 text-primary-foreground" />
         </div>
         <div>
-          <span className="font-display font-bold text-sidebar-foreground text-sm">DropGuard AI</span>
+          <span className="font-display font-bold text-sidebar-foreground text-sm">Student Drop Prediction System</span>
           <p className="text-[10px] text-sidebar-foreground/50">{roleLabel} Panel</p>
         </div>
       </div>
